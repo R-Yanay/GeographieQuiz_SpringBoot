@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GeographieQuiz — Highscore</title>
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+    <header>
+        <h1>Highscore</h1>
+        <nav>
+            <a href="/" class="nav-btn">Startseite</a>
+            <a href="/quiz" class="nav-btn">Quiz spielen</a>
+        </nav>
+    </header>
+
+    <main>
+        <section class="highscore-section">
+            <h2>Top 10 Spieler</h2>
+            <table id="highscore-table" class="highscore-table">
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>Spieler</th>
+                        <th>Punkte</th>
+                        <th>Fragen</th>
+                        <th>Datum</th>
+                    </tr>
+                </thead>
+                <tbody id="highscore-body">
+                    <tr><td colspan="5">Wird geladen...</td></tr>
+                </tbody>
+            </table>
+        </section>
+    </main>
+
+    <footer>
+        <p>GeographieQuiz — Spring Boot + H2-Datenbank Projekt</p>
+    </footer>
+
+    <script>
+        async function loadHighscores() {
+            try {
+                const response = await fetch('/api/players/highscore');
+                const highscores = await response.json();
+
+                const tbody = document.getElementById('highscore-body');
+                tbody.innerHTML = '';
+
+                if (highscores.length === 0) {
+                    tbody.innerHTML = '<tr><td colspan="5">Noch keine Highscores vorhanden. Spiele jetzt!</td></tr>';
+                    return;
+                }
+
+                highscores.forEach((hs, index) => {
+                    const row = document.createElement('tr');
+                    const date = new Date(hs.gameDate);
+                    const dateStr = date.toLocaleDateString('de-DE') + ' ' + date.toLocaleTimeString('de-DE', {hour: '2-digit', minute: '2-digit'});
+
+                    row.innerHTML = `
+                        <td>${index + 1}</td>
+                        <td>${hs.player ? hs.player.name : 'Unbekannt'}</td>
+                        <td><strong>${hs.score}</strong></td>
+                        <td>${hs.totalQuestions}</td>
+                        <td>${dateStr}</td>
+                    `;
+                    tbody.appendChild(row);
+                });
+            } catch (error) {
+                document.getElementById('highscore-body').innerHTML = '<tr><td colspan="5">Fehler beim Laden: ' + error.message + '</td></tr>';
+            }
+        }
+
+        loadHighscores();
+    </script>
+</body>
+</html>

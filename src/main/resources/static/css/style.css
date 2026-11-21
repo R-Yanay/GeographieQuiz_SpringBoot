@@ -1,0 +1,433 @@
+/* === GeographieQuiz — Professional Design === */
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Helvetica Neue', Arial, sans-serif;
+    background: #f4f6f9;
+    min-height: 100vh;
+    color: #1a1a2e;
+    line-height: 1.6;
+}
+
+header {
+    background: #1a1a2e;
+    padding: 32px 20px;
+    text-align: center;
+    border-bottom: 3px solid #0d6efd;
+}
+
+header h1 {
+    font-size: 2em;
+    font-weight: 700;
+    color: #ffffff;
+    margin-bottom: 8px;
+    letter-spacing: -0.5px;
+}
+
+header p {
+    color: #a0aec0;
+    font-size: 1em;
+    font-weight: 400;
+}
+
+nav {
+    display: flex;
+    justify-content: center;
+    gap: 12px;
+    margin-top: 20px;
+    flex-wrap: wrap;
+}
+
+.nav-btn {
+    background: transparent;
+    color: #a0aec0;
+    padding: 10px 22px;
+    border-radius: 6px;
+    text-decoration: none;
+    font-weight: 500;
+    font-size: 0.95em;
+    border: 1px solid #2d3748;
+    transition: all 0.2s;
+}
+
+.nav-btn:hover {
+    background: #0d6efd;
+    color: #ffffff;
+    border-color: #0d6efd;
+}
+
+main {
+    max-width: 960px;
+    margin: 40px auto;
+    padding: 0 24px;
+}
+
+/* === Info Section === */
+.info-section {
+    background: #ffffff;
+    border-radius: 8px;
+    padding: 32px;
+    margin-bottom: 24px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+    border: 1px solid #e2e8f0;
+}
+
+.info-section h2 {
+    color: #1a1a2e;
+    margin-bottom: 20px;
+    font-size: 1.3em;
+    font-weight: 600;
+    padding-bottom: 12px;
+    border-bottom: 2px solid #0d6efd;
+}
+
+.info-section ul {
+    list-style: none;
+    padding: 0;
+}
+
+.info-section li {
+    padding: 12px 0;
+    border-bottom: 1px solid #edf2f7;
+    font-size: 0.95em;
+    color: #4a5568;
+}
+
+.info-section li:last-child {
+    border-bottom: none;
+}
+
+.info-section li strong {
+    color: #1a1a2e;
+}
+
+/* === Categories === */
+.categories-section {
+    background: #ffffff;
+    border-radius: 8px;
+    padding: 32px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+    border: 1px solid #e2e8f0;
+}
+
+.categories-section h2 {
+    color: #1a1a2e;
+    margin-bottom: 20px;
+    text-align: center;
+    font-size: 1.3em;
+    font-weight: 600;
+}
+
+.category-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+    gap: 16px;
+}
+
+.category-card {
+    background: #f7fafc;
+    color: #1a1a2e;
+    padding: 24px 20px;
+    border-radius: 8px;
+    text-align: center;
+    font-weight: 600;
+    font-size: 1em;
+    border: 1px solid #e2e8f0;
+    transition: all 0.2s;
+}
+
+.category-card:hover {
+    background: #0d6efd;
+    color: #ffffff;
+    border-color: #0d6efd;
+}
+
+/* === Player Section === */
+.player-section {
+    background: #ffffff;
+    border-radius: 8px;
+    padding: 48px 40px;
+    text-align: center;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+    border: 1px solid #e2e8f0;
+    max-width: 500px;
+    margin: 0 auto;
+}
+
+.player-section h2 {
+    color: #1a1a2e;
+    margin-bottom: 24px;
+    font-size: 1.3em;
+    font-weight: 600;
+}
+
+.player-section input {
+    width: 100%;
+    padding: 12px 16px;
+    margin: 10px 0;
+    border: 1px solid #cbd5e0;
+    border-radius: 6px;
+    font-size: 1em;
+    outline: none;
+    transition: border-color 0.2s;
+    background: #f7fafc;
+}
+
+.player-section input:focus {
+    border-color: #0d6efd;
+    background: #ffffff;
+}
+
+/* === Buttons === */
+.btn-primary {
+    background: #0d6efd;
+    color: #ffffff;
+    padding: 12px 32px;
+    border: none;
+    border-radius: 6px;
+    font-size: 1em;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background 0.2s;
+    margin: 16px 8px 0;
+}
+
+.btn-primary:hover {
+    background: #0b5ed7;
+}
+
+.btn-secondary {
+    background: transparent;
+    color: #0d6efd;
+    padding: 12px 32px;
+    border: 1px solid #0d6efd;
+    border-radius: 6px;
+    font-size: 1em;
+    font-weight: 500;
+    cursor: pointer;
+    text-decoration: none;
+    display: inline-block;
+    transition: all 0.2s;
+    margin: 16px 8px 0;
+}
+
+.btn-secondary:hover {
+    background: #0d6efd;
+    color: #ffffff;
+}
+
+/* === Quiz Section === */
+.quiz-section {
+    background: #ffffff;
+    border-radius: 8px;
+    padding: 32px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+    border: 1px solid #e2e8f0;
+}
+
+.quiz-header {
+    margin-bottom: 28px;
+}
+
+.progress-bar {
+    width: 100%;
+    height: 6px;
+    background: #edf2f7;
+    border-radius: 3px;
+    overflow: hidden;
+    margin-bottom: 16px;
+}
+
+.progress-fill {
+    height: 100%;
+    background: #0d6efd;
+    transition: width 0.3s;
+    width: 0%;
+}
+
+.quiz-info {
+    display: flex;
+    justify-content: space-between;
+    font-weight: 500;
+    color: #4a5568;
+    font-size: 0.9em;
+}
+
+.question-container h2 {
+    color: #1a1a2e;
+    margin-bottom: 24px;
+    font-size: 1.25em;
+    font-weight: 600;
+    line-height: 1.5;
+}
+
+.answers-container {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+}
+
+.answer-btn {
+    background: #f7fafc;
+    border: 1px solid #cbd5e0;
+    padding: 16px 20px;
+    border-radius: 6px;
+    font-size: 0.95em;
+    cursor: pointer;
+    transition: all 0.2s;
+    text-align: left;
+    color: #1a1a2e;
+    font-weight: 400;
+}
+
+.answer-btn:hover:not(:disabled) {
+    border-color: #0d6efd;
+    background: #ebf4ff;
+}
+
+.answer-btn:disabled {
+    cursor: not-allowed;
+    opacity: 0.6;
+}
+
+.answer-btn.correct {
+    background: #d1fae5;
+    border-color: #059669;
+    color: #065f46;
+}
+
+.answer-btn.wrong {
+    background: #fee2e2;
+    border-color: #dc2626;
+    color: #991b1b;
+}
+
+.feedback {
+    text-align: center;
+    margin-top: 24px;
+    font-size: 1em;
+    font-weight: 500;
+    min-height: 30px;
+    color: #4a5568;
+}
+
+/* === Result Section === */
+.result-section {
+    background: #ffffff;
+    border-radius: 8px;
+    padding: 48px 40px;
+    text-align: center;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+    border: 1px solid #e2e8f0;
+    max-width: 500px;
+    margin: 0 auto;
+}
+
+.result-section h2 {
+    color: #1a1a2e;
+    margin-bottom: 24px;
+    font-size: 1.3em;
+    font-weight: 600;
+}
+
+.result-card h1 {
+    font-size: 3em;
+    color: #0d6efd;
+    margin: 16px 0;
+    font-weight: 700;
+}
+
+.result-card p {
+    color: #4a5568;
+    font-size: 1.1em;
+}
+
+/* === Highscore Table === */
+.highscore-section {
+    background: #ffffff;
+    border-radius: 8px;
+    padding: 32px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+    border: 1px solid #e2e8f0;
+}
+
+.highscore-section h2 {
+    color: #1a1a2e;
+    margin-bottom: 24px;
+    text-align: center;
+    font-size: 1.3em;
+    font-weight: 600;
+}
+
+.highscore-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.highscore-table th,
+.highscore-table td {
+    padding: 14px 16px;
+    text-align: left;
+    border-bottom: 1px solid #edf2f7;
+    font-size: 0.95em;
+}
+
+.highscore-table th {
+    background: #1a1a2e;
+    color: #ffffff;
+    font-weight: 600;
+    font-size: 0.85em;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.highscore-table tr:hover {
+    background: #f7fafc;
+}
+
+.highscore-table td:first-child {
+    font-weight: 600;
+    color: #0d6efd;
+    width: 50px;
+}
+
+/* === Footer === */
+footer {
+    text-align: center;
+    padding: 32px 20px;
+    color: #718096;
+    font-size: 0.85em;
+    border-top: 1px solid #e2e8f0;
+    margin-top: 48px;
+    background: #ffffff;
+}
+
+/* === Responsive === */
+@media (max-width: 600px) {
+    header h1 {
+        font-size: 1.5em;
+    }
+
+    .answers-container {
+        grid-template-columns: 1fr;
+    }
+
+    .quiz-info {
+        flex-direction: column;
+        gap: 4px;
+    }
+
+    .category-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .player-section,
+    .result-section {
+        padding: 32px 24px;
+    }
+}

@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GeographieQuiz — Startseite</title>
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+    <header>
+        <h1>GeographieQuiz</h1>
+        <p>Teste dein Wissen über Laender, Hauptstaedte und Kontinente</p>
+    </header>
+
+    <nav>
+        <a href="/quiz" class="nav-btn">Quiz spielen</a>
+        <a href="/highscore" class="nav-btn">Highscore</a>
+        <a href="/h2-console" class="nav-btn" target="_blank">H2-Datenbank</a>
+        <a href="/swagger-ui.html" class="nav-btn" target="_blank">API-Dokumentation</a>
+    </nav>
+
+    <main>
+        <section class="categories-section">
+            <h2>Kategorien</h2>
+            <div class="category-grid">
+                <div class="category-card">Europa</div>
+                <div class="category-card">Asien</div>
+                <div class="category-card">Afrika</div>
+                <div class="category-card">Amerika</div>
+                <div class="category-card">Ozeanien</div>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <p>GeographieQuiz — Spring Boot + H2-Datenbank Projekt</p>
+    </footer>
+</body>
+</html>

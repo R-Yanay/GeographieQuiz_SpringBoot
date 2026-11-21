@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GeographieQuiz — Spiel</title>
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+    <header>
+        <h1>GeographieQuiz</h1>
+        <nav>
+            <a href="/" class="nav-btn">Startseite</a>
+            <a href="/highscore" class="nav-btn">Highscore</a>
+        </nav>
+    </header>
+
+    <main>
+        <!-- Spieler-Registrierung -->
+        <section id="player-section" class="player-section">
+            <h2>Spieler registrieren</h2>
+            <form id="player-form">
+                <input type="text" id="player-name" placeholder="Dein Name" required minlength="2" maxlength="100">
+                <input type="email" id="player-email" placeholder="Deine E-Mail (optional)">
+                <button type="submit" class="btn-primary">Spielen!</button>
+            </form>
+        </section>
+
+        <!-- Quiz-Bereich -->
+        <section id="quiz-section" class="quiz-section" style="display:none;">
+            <div class="quiz-header">
+                <div class="progress-bar">
+                    <div id="progress-fill" class="progress-fill"></div>
+                </div>
+                <div class="quiz-info">
+                    <span id="question-counter">Frage 1 von 10</span>
+                    <span id="score-display">Punkte: 0</span>
+                    <span id="timer-display">15s</span>
+                </div>
+            </div>
+
+            <div id="question-container" class="question-container">
+                <h2 id="question-text"></h2>
+                <div id="answers-container" class="answers-container">
+                    <button class="answer-btn" data-answer="A" onclick="submitAnswer('A')">A: <span id="answer-a"></span></button>
+                    <button class="answer-btn" data-answer="B" onclick="submitAnswer('B')">B: <span id="answer-b"></span></button>
+                    <button class="answer-btn" data-answer="C" onclick="submitAnswer('C')">C: <span id="answer-c"></span></button>
+                    <button class="answer-btn" data-answer="D" onclick="submitAnswer('D')">D: <span id="answer-d"></span></button>
+                </div>
+                <div id="feedback" class="feedback"></div>
+            </div>
+        </section>
+
+        <!-- Ergebnis-Bereich -->
+        <section id="result-section" class="result-section" style="display:none;">
+            <h2>Spiel beendet</h2>
+            <div class="result-card">
+                <p>Dein Ergebnis:</p>
+                <h1 id="final-score">0 / 10</h1>
+                <p id="final-percentage">0%</p>
+                <button class="btn-primary" onclick="location.reload()">Nochmal spielen</button>
+                <a href="/highscore" class="btn-secondary">Highscore ansehen</a>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <p>GeographieQuiz — Spring Boot + H2-Datenbank Projekt</p>
+    </footer>
+
+    <script>
+        let playerId = null;
+        let sessionId = null;
+        let questions = [];
+        let currentQuestionIndex = 0;
+        let score = 0;
+        let timer = null;
+        let timeLeft = 15;
+
+        // Spieler registrieren
+        document.getElementById('player-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const name = document.getElementById('player-name').value;
+            const email = document.getElementById('player-email').value;
+
+            try {
+                // Spieler erstellen
+                const playerResponse = await fetch('/api/players', {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({name, email})
+                });
+                const player = await playerResponse.json();
+                playerId = player.id;
+
+                // Spiel starten
+                const gameResponse = await fetch('/api/quiz/start', {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({playerId: player.id, questionCount: 10})
+                });
+                const gameData = await gameResponse.json();
+                sessionId = gameData.sessionId;
+                questions = gameData.questions;
+                currentQuestionIndex = 0;
+                score = 0;
+
+                // UI wechseln
+                document.getElementById('player-section').style.display = 'none';
+                document.getElementById('quiz-section').style.display = 'block';
+
+                showQuestion();
+            } catch (error) {
+                alert('Fehler beim Starten: ' + error.message);
+            }
+        });
+
+        function showQuestion() {
+            if (currentQuestionIndex >= questions.length) {
+                endGame();
+                return;
+            }
+
+            const question = questions[currentQuestionIndex];
+            document.getElementById('question-text').textContent = question.questionText;
+            document.getElementById('answer-a').textContent = question.answerA;
+            document.getElementById('answer-b').textContent = question.answerB;
+            document.getElementById('answer-c').textContent = question.answerC;
+            document.getElementById('answer-d').textContent = question.answerD;
+            document.getElementById('question-counter').textContent = `Frage ${currentQuestionIndex + 1} von ${questions.length}`;
+            document.getElementById('score-display').textContent = `Punkte: ${score}`;
+            document.getElementById('feedback').textContent = '';
+
+            // Fortschrittsbalken
+            const progress = ((currentQuestionIndex) / questions.length) * 100;
+            document.getElementById('progress-fill').style.width = progress + '%';
+
+            // Timer starten
+            startTimer();
+
+            // Buttons aktivieren
+            document.querySelectorAll('.answer-btn').forEach(btn => {
+                btn.disabled = false;
+                btn.classList.remove('correct', 'wrong');
+            });
+        }
+
+        function startTimer() {
+            timeLeft = 15;
+            document.getElementById('timer-display').textContent = `⏱️ ${timeLeft}s`;
+            clearInterval(timer);
+            timer = setInterval(() => {
+                timeLeft--;
+                document.getElementById('timer-display').textContent = `⏱️ ${timeLeft}s`;
+                if (timeLeft <= 0) {
+                    clearInterval(timer);
+                    submitAnswer(null); // Zeit abgelaufen
+                }
+            }, 1000);
+        }
+
+        async function submitAnswer(selectedAnswer) {
+            clearInterval(timer);
+
+            const question = questions[currentQuestionIndex];
+            const buttons = document.querySelectorAll('.answer-btn');
+            buttons.forEach(btn => btn.disabled = true);
+
+            try {
+                const response = await fetch('/api/quiz/answer', {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({
+                        sessionId: sessionId,
+                        questionId: question.id,
+                        selectedAnswer: selectedAnswer || 'X'
+                    })
+                });
+                const result = await response.json();
+
+                if (result.isCorrect) {
+                    score++;
+                    document.getElementById('score-display').textContent = `Punkte: ${score}`;
+                    document.querySelector(`[data-answer="${selectedAnswer}"]`).classList.add('correct');
+                    document.getElementById('feedback').textContent = '✅ Richtig!';
+                } else {
+                    if (selectedAnswer) {
+                        document.querySelector(`[data-answer="${selectedAnswer}"]`).classList.add('wrong');
+                    }
+                    document.querySelector(`[data-answer="${result.correctAnswer}"]`).classList.add('correct');
+                    document.getElementById('feedback').textContent = `❌ Falsch! Richtig war: ${result.correctAnswer}`;
+                }
+
+                setTimeout(() => {
+                    currentQuestionIndex++;
+                    showQuestion();
+                }, 1500);
+            } catch (error) {
+                alert('Fehler bei der Antwort: ' + error.message);
+            }
+        }
+
+        async function endGame() {
+            try {
+                const response = await fetch(`/api/quiz/end/${sessionId}`, {method: 'POST'});
+                const result = await response.json();
+
+                document.getElementById('quiz-section').style.display = 'none';
+                document.getElementById('result-section').style.display = 'block';
+                document.getElementById('final-score').textContent = `${result.finalScore} / ${result.totalQuestions}`;
+                document.getElementById('final-percentage').textContent = `${result.percentage}%`;
+            } catch (error) {
+                alert('Fehler beim Beenden: ' + error.message);
+            }
+        }
+    </script>
+</body>
+</html>
