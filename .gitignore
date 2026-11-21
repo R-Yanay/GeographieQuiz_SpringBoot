@@ -1,0 +1,23 @@
+# Compiled class files
+/target/
+
+# IntelliJ IDEA
+.idea/
+*.iml
+*.iws
+*.ipr
+
+# VS Code
+.vscode/
+
+# macOS
+.DS_Store
+
+# Logs
+*.log
+
+# Java
+*.class
+*.jar
+*.war
+*.ear
